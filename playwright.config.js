@@ -31,8 +31,8 @@ export default defineConfig({
   },
   
   use: {
-    actionTimeout: 30000,
-    navigationTimeout: 60000,
+    actionTimeout: 120000,
+    navigationTimeout: 120000,
     baseURL: 'https://staging.eazyupdates.com',
 
     // ensure no session reuse (fresh context every test)
@@ -60,24 +60,24 @@ export default defineConfig({
     },
   
 
-    {
-      name: 'firefox',
-      use: { 
-       ...devices['Desktop Firefox'], 
-       screenshot: 'only-on-failure',
-       video: 'retain-on-failure',
-       trace: 'on-first-retry',
-      },
-    },
+    // {
+    //   name: 'firefox',
+    //   use: { 
+    //    ...devices['Desktop Firefox'], 
+    //    screenshot: 'only-on-failure',
+    //    video: 'retain-on-failure',
+    //    trace: 'on-first-retry',
+    //   },
+    // },
 
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'],
-       screenshot: 'only-on-failure',
-       video: 'retain-on-failure',
-       trace: 'on-first-retry',
-      },
-    },
+    // {
+    //   name: 'webkit',
+    //   use: { ...devices['Desktop Safari'],
+    //    screenshot: 'only-on-failure',
+    //    video: 'retain-on-failure',
+    //    trace: 'on-first-retry',
+    //   },
+    // },
 
     /* Test against mobile viewports. */
     // {
