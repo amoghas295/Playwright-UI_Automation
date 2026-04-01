@@ -60,24 +60,24 @@ export default defineConfig({
     },
   
 
-    {
-      name: 'firefox',
-      use: { 
-       ...devices['Desktop Firefox'], 
-       screenshot: 'only-on-failure',
-       video: 'retain-on-failure',
-       trace: 'on-first-retry',
-      },
-    },
+    // {
+    //   name: 'firefox',
+    //   use: { 
+    //    ...devices['Desktop Firefox'], 
+    //    screenshot: 'only-on-failure',
+    //    video: 'retain-on-failure',
+    //    trace: 'on-first-retry',
+    //   },
+    // },
 
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'],
-       screenshot: 'only-on-failure',
-       video: 'retain-on-failure',
-       trace: 'on-first-retry',
-      },
-    },
+    // {
+    //   name: 'webkit',
+    //   use: { ...devices['Desktop Safari'],
+    //    screenshot: 'only-on-failure',
+    //    video: 'retain-on-failure',
+    //    trace: 'on-first-retry',
+    //   },
+    // },
 
     /* Test against mobile viewports. */
     // {
