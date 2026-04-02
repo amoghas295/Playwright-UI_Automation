@@ -1,9 +1,9 @@
 export class DashboardPage {
   constructor(page) {
     this.page = page;
-    this.dashboardLink = page.getByRole('link', { name: /dashboard/i });
-    this.profile = page.locator('.user-profile-image');
-    this.logout = page.getByText('Logout');
+    this.dashboardLink = page.getByRole('link', { name: /dashboard/i }).first();
+    this.profile = page.locator('.user-profile-image').first();
+    this.logout = page.getByText('Logout', { exact: true }).first();
   }
 
   async navigate() {

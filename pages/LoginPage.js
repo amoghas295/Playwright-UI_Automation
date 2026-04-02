@@ -11,13 +11,13 @@ export class LoginPage {
   }
 
   async loginWithGoogle(context) {
+    const googleBtn = this.page.frameLocator('iframe').getByRole('button', { name: /google/i });
+    await googleBtn.waitFor({ state: 'visible' });
+
     const [popup] = await Promise.all([
-    context.waitForEvent('page'),
-    this.page
-      .frameLocator('iframe')
-      .getByRole('button', { name: /google/i })
-      .click({ force: true })
-]);
+      context.waitForEvent('page'),
+      googleBtn.click()
+    ]);
 
     await popup.waitForLoadState();
 
