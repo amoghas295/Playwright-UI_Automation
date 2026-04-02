@@ -5,7 +5,7 @@ test('logout validation', async ({ loggedInPage }) => {
 
   const dashboard = new DashboardPage(loggedInPage);
 
-  await loggedInPage.goto('/user/dashboard');
+  await dashboard.navigate();
 
   await dashboard.logoutUser();
 
