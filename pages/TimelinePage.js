@@ -5,80 +5,52 @@ export class TimelinePage {
     // Sidebar navigation
     this.timelineLink = page.getByTestId('timeline');
 
-    // Editor (TipTap / contenteditable)
+    // Editor
     this.editor = page.locator('div[contenteditable="true"]');
 
-    // Month header
-    this.monthHeader = page.locator('main').getByText(/\d{4}\s+[A-Z]+/).first();
+    // Draft chip
+    this.draftChip = page.getByText(/draft/i);
 
-    // Date rows (REAL FIX)
-    this.dayBlocks = page.locator('main > div div').filter({
-      has: page.locator('text=/^\\d{2}\\s[A-Za-z]{3}$/')
-    });
+    // Publish button
+    this.publishBtn = page.getByRole('button', { name: /publish/i });
+
+    // Timeline header (page loaded signal)
+    this.timelineHeader = page.locator('main').getByText('My Timeline');
   }
 
-  //  DO NOT USE DIRECT URL
-  // async navigate() { ... }  remove usage
+  async navigate() {
+    await this.page.goto('/user/dashboard');
+    await this.page.waitForLoadState('networkidle');
+  }
 
-  //  Use sidebar navigation (dynamic user-safe)
+  // IMPORTANT: always use sidebar (fix dynamic URL issue)
   async goToMyTimelineViaMenu() {
-    await this.timelineLink.waitFor({ state: 'visible', timeout: 10000 });
+    await this.timelineLink.waitFor({ state: 'visible', timeout: 15000 });
     await this.timelineLink.click();
 
-    await this.page.waitForURL(/\/user\/timeline/);
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForURL(/\/user\/timeline/, { timeout: 30000 });
   }
 
   async waitForTimelineReady() {
-    await this.page.waitForLoadState('networkidle');
+  await this.timelineHeader.waitFor({ state: 'visible', timeout: 30000 });
+}
 
-    await this.monthHeader.waitFor({
-      state: 'visible',
-      timeout: 30000
-    });
-  }
-
-  // ----------------------------
-  // REUSABLE UPDATE FUNCTIONS
-  // ----------------------------
-
-  async enterUpdate(text) {
-    await this.editor.waitFor({ state: 'visible', timeout: 15000 });
+  async addUpdate(text) {
+    await this.editor.waitFor({ state: 'visible' });
     await this.editor.click();
     await this.editor.fill(text);
   }
 
+  async verifyDraftVisible() {
+    await this.draftChip.waitFor({ state: 'visible', timeout: 7000 });
+  }
+
   async publishUpdate() {
-    await this.page.getByRole('button', { name: /publish/i }).click();
+    await this.publishBtn.waitFor({ state: 'visible' });
+    await this.publishBtn.click();
   }
 
-  async addAndPublishUpdate(text) {
-    await this.enterUpdate(text);
-    await this.publishUpdate();
-  }
-
-  // ----------------------------
-  // DATA HELPERS (FIXED)
-  // ----------------------------
-
-  async getDateFromBlock(dayBlock) {
-    const date = dayBlock.locator('text=/^\\d{2}\\s[A-Za-z]{3}$/').first();
-    return (await date.textContent())?.trim();
-  }
-
-  async getEntriesForDayBlock(dayBlock) {
-    return dayBlock.locator('div').filter({
-      hasText: /No Update|On Leave|Weekend|Not Updated|rabbit|Testing/
-    });
-  }
-
-  getProjectLinkFromEntry(entry) {
-    return entry.locator('a[href*="/user/project/"]');
-  }
-
-  getAddButtonFromEntry(entry) {
-    return entry.locator('button').filter({
-      has: this.page.locator('svg')
-    }).first();
+  async verifyUpdateVisible(text) {
+    await this.page.getByText(text).waitFor({ state: 'visible', timeout: 10000 });
   }
 }
