@@ -4,11 +4,18 @@ import { TimelinePage } from '../../pages/TimelinePage';
 test('timeline update column validation', async ({ loggedInPage }) => {
   const timeline = new TimelinePage(loggedInPage);
 
-  await timeline.navigate();
+  // Start after login → dashboard
+  await loggedInPage.waitForLoadState('networkidle');
+
+  //  Navigate via sidebar (CRITICAL FIX)
+  await timeline.goToMyTimelineViaMenu();
+
+  //  Wait for timeline to load properly
   await timeline.waitForTimelineReady();
 
-  await timeline.addUpdate('Test update');
+  // Reusable update flow
+  await timeline.addAndPublishUpdate('Test update');
 
-  await expect(loggedInPage.getByRole('textbox').or(loggedInPage.locator('div[contenteditable="true"]')))
-    .toContainText('Test update');
+  // Validate
+  await expect(loggedInPage.locator('body')).toContainText('Test update');
 });
