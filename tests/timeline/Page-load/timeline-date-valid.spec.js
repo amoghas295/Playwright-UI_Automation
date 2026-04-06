@@ -24,6 +24,7 @@ test('timeline Date order and scrolling validation', async ({ loggedInPage }) =>
 
   // 1. Validate Timeline page loads successfully
   await timeline.navigate();
+  await timeline.goToMyTimelineViaMenu();
   await timeline.waitForTimelineReady();
 
   // Get initial month header

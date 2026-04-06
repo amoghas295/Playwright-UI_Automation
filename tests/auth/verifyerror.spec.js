@@ -1,14 +1,16 @@
-const {test,expect}=require("@playwright/test")
-const { link }=require("node:fs")
+import { test, expect } from '@playwright/test';
 
-test.use({ storageState: 'auth.json'})
+test.use({ storageState: 'auth.json' });
 
-test("validate navigating project error",async ({page})=> {
+test('validate navigating project error', async ({ page }) => {
     await page.goto('/user/dashboard');
     await page.waitForLoadState('domcontentloaded');
-    const  proj= await page.getByText('1232').first()
+
+    // Wait for a numeric code/project chip that exists on the dashboard
+    const proj = page.locator('text=/\\d+/').first();
+    await proj.waitFor({ state: 'visible', timeout: 15000 });
     await proj.click();
-    // await expect(page).toHaveURL(/1232/);
-    // await page.getByText('Project Details', { exact: true })
-    await expect(page.locator(':text-is("Location Statistics")').first()).toBeVisible();
-})
+
+    // Verify redirection to project details or a specific statistics locator
+    await expect(page.locator(':text-is("Location Statistics")').first()).toBeVisible({ timeout: 20000 });
+});

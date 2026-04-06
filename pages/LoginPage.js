@@ -7,7 +7,14 @@ export class LoginPage {
   }
 
   async navigate() {
-    await this.page.goto('/user/login');
+    await this.page.goto('/user/login', {
+      waitUntil: 'domcontentloaded'
+    });
+
+    // Wait for Google button iframe (real signal page is usable)
+    await this.page.frameLocator('iframe')
+      .getByRole('button', { name: /google/i })
+      .waitFor({ state: 'visible', timeout: 15000 });
   }
 
   async loginWithGoogle(context) {

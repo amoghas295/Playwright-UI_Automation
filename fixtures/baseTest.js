@@ -3,7 +3,6 @@ import { LoginPage } from '../pages/LoginPage.js';
 
 export const test = base.extend({
   loggedInPage: async ({ page, context }, use) => {
-
     const loginPage = new LoginPage(page);
 
     for (let attempt = 1; attempt <= 2; ++attempt) {
@@ -11,9 +10,11 @@ export const test = base.extend({
         await loginPage.navigate();
         await loginPage.loginWithGoogle(context);
 
-        //  IMPORTANT: wait until app is fully loaded
+        // wait until NOT on login page
+        await page.waitForURL(/eazyupdates/, { timeout: 30000 });
+
+        // ensure app has fully loaded onto the screen
         await page.waitForLoadState('networkidle');
-        await page.waitForURL(/eazyupdates/);
 
         break;
       } catch (e) {
